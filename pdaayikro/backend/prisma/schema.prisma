@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int      @id @default(autoincrement())
+  fullName           String
+  email              String   @unique
+  phone              String   @default("")
+  password           String
+  preparationGoal    String   @default("JEE Main + Advanced")
+  currentClass       String   @default("11")
+  studyLevel         String   @default("Average")
+  previousPercentage Float    @default(0)
+  streakCount        Int      @default(0)
+  streakLastDate     String?
+  dailyActiveSeconds Int      @default(0)
+  dailyActiveDate    String?
+  tasks              Task[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  dueDate   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, dueDate])
+}
