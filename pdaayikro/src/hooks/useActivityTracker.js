@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react'
+import { getApiBaseUrl } from '../utils/api'
 
 export default function useActivityTracker(user) {
-  const API_BASE_URL = useMemo(() => import.meta.env.VITE_API_BASE_URL || 'http://localhost:5057', [])
+  const API_BASE_URL = useMemo(() => getApiBaseUrl(), [])
   const lastInteractionRef = useRef(Date.now())
   const bucketRef = useRef(0)
   const flushInFlightRef = useRef(false)

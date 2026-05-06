@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { getApiBaseUrl } from '../utils/api'
 import { Bell, Flame } from 'lucide-react'
 import StreakModal from '../components/StreakModal'
 import useTasks from '../hooks/useTasks'
@@ -9,7 +10,7 @@ function HomePage({ user }) {
       ? 'Foundation syllabus activated for your class.'
       : 'JEE syllabus plan activated for your class.'
 
-  const API_BASE_URL = useMemo(() => import.meta.env.VITE_API_BASE_URL || 'http://localhost:5057', [])
+  const API_BASE_URL = useMemo(() => getApiBaseUrl(), [])
   const [streakInfo, setStreakInfo] = useState({ streakCount: user?.streakCount || 0, dailyActiveSeconds: user?.dailyActiveSeconds || 0 })
   const [isStreakOpen, setIsStreakOpen] = useState(false)
 

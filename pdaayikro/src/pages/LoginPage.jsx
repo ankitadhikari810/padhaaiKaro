@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
 import FormInput from '../components/FormInput'
+import { getApiBaseUrl } from '../utils/api'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5057'
+const API_BASE_URL = getApiBaseUrl()
 
 function LoginPage({ onLogin }) {
   const navigate = useNavigate()
@@ -31,7 +32,7 @@ function LoginPage({ onLogin }) {
 
       if (!response.ok) {
         throw new Error(data.error || 'Login failed')
-      }
+      } 
 
       onLogin(data.user)
       navigate('/home', { replace: true })

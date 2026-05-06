@@ -6,6 +6,12 @@ const { PrismaClient } = require("@prisma/client");
 
 dotenv.config();
 
+const dbUrl = process.env.DATABASE_URL?.trim();
+const hasBrokenLocalPath = dbUrl === "file:./prisma/dev.db";
+if (!dbUrl || hasBrokenLocalPath) {
+  process.env.DATABASE_URL = "file:./dev.db";
+}
+
 const app = express();
 const prisma = new PrismaClient();
 const PORT = Number(process.env.PORT) || 5057;
@@ -162,6 +168,7 @@ app.post("/api/auth/register", async (req, res) => {
       user,
     });
   } catch (error) {
+    console.error("Registration error:", error);
     if (error.code === "P2002") {
       return res.status(409).json({ error: "Email already registered" });
     }

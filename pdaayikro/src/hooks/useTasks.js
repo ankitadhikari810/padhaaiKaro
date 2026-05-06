@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { getApiBaseUrl } from '../utils/api'
 
 function isoToday() {
   return new Date().toISOString().slice(0, 10)
 }
 
 export default function useTasks(userId, dateIso = isoToday()) {
-  const API_BASE_URL = useMemo(() => import.meta.env.VITE_API_BASE_URL || 'http://localhost:5057', [])
+  const API_BASE_URL = useMemo(() => getApiBaseUrl(), [])
   const [tasks, setTasks] = useState([])
   const [status, setStatus] = useState({ loading: false, error: '' })
 
