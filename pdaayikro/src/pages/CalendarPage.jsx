@@ -73,7 +73,14 @@ function CalendarPage({ user }) {
 
         const cached = sessionStorage.getItem(cacheKey)
         if (cached) {
-          const parsed = JSON.parse(cached)
+          let parsed = null
+          try {
+            parsed = JSON.parse(cached)
+          } catch {
+            // Corrupted cache can throw "Unexpected end of JSON input"
+            sessionStorage.removeItem(cacheKey)
+          }
+          if (!parsed || typeof parsed !== 'object') return
           if (!isCancelled) {
             setHolidayByIso((prev) => ({ ...prev, ...parsed }))
             setStatus({ loading: false, error: '' })
@@ -83,7 +90,9 @@ function CalendarPage({ user }) {
 
         const response = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${COUNTRY_CODE}`)
         if (!response.ok) throw new Error('Holiday API failed')
-        const data = await response.json()
+        const raw = await response.text()
+        const data = raw ? JSON.parse(raw) : []
+        if (!Array.isArray(data)) throw new Error('Unexpected holiday response')
 
         const byIso = data.reduce((acc, item) => {
           const iso = item.date
@@ -115,7 +124,7 @@ function CalendarPage({ user }) {
     <section className="space-y-4 text-slate-100">
       <section className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <article className="rounded-2xl border border-slate-700 bg-slate-800/80 p-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-slate-400">Calendar</p>
               <h2 className="mt-1 text-2xl font-semibold text-white">{monthLabel}</h2>
@@ -156,21 +165,22 @@ function CalendarPage({ user }) {
                   if (!y || !mo) return
                   setActiveMonth(new Date(y, mo - 1, 1))
                 }}
-                className="rounded-lg border border-slate-700 bg-slate-900/40 px-3 py-2 text-sm text-slate-200 outline-none focus:ring-2 focus:ring-amber-300/40"
+                className="w-full rounded-lg border border-slate-700 bg-slate-900/40 px-3 py-2 text-sm text-slate-200 outline-none focus:ring-2 focus:ring-amber-300/40 sm:w-auto"
               />
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-7 gap-2">
+          <div className="mt-4">
+            <div className="grid grid-cols-7 gap-1 sm:gap-2">
             {weekDays.map((label) => (
-              <div key={label} className="px-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <div key={label} className="px-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400 sm:px-2 sm:text-xs">
                 {label}
               </div>
             ))}
 
             {monthDays.map((cell, idx) => {
               if (!cell) {
-                return <div key={`blank-${idx}`} className="h-20 rounded-xl border border-transparent" />
+                return <div key={`blank-${idx}`} className="h-14 rounded-lg border border-transparent sm:h-20 sm:rounded-xl" />
               }
 
               const iso = toISODate(cell)
@@ -185,32 +195,33 @@ function CalendarPage({ user }) {
                   type="button"
                   onClick={() => setSelectedDate(cell)}
                   className={[
-                    'h-20 rounded-xl border p-2 text-left transition',
+                    'h-14 rounded-lg border p-1.5 text-left transition sm:h-20 sm:rounded-xl sm:p-2',
                     isSelected ? 'border-amber-300 bg-amber-200/15' : 'border-slate-700 bg-slate-900/30 hover:bg-slate-900/60',
                   ].join(' ')}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <p className={isWeekend ? 'text-sm font-semibold text-slate-200' : 'text-sm font-semibold text-white'}>
+                    <p className={isWeekend ? 'text-xs font-semibold text-slate-200 sm:text-sm' : 'text-xs font-semibold text-white sm:text-sm'}>
                       {cell.getDate()}
                     </p>
                     {isToday ? (
-                      <span className="rounded-full bg-lime-400/15 px-2 py-0.5 text-[11px] font-semibold text-lime-300">
+                      <span className="rounded-full bg-lime-400/15 px-1.5 py-0.5 text-[9px] font-semibold text-lime-300 sm:px-2 sm:text-[11px]">
                         Today
                       </span>
                     ) : null}
                   </div>
 
                   {holidays.length ? (
-                    <p className="mt-2 line-clamp-2 text-xs text-rose-200">
+                    <p className="mt-0.5 line-clamp-1 text-[9px] text-rose-200 sm:mt-2 sm:line-clamp-2 sm:text-xs">
                       {holidays[0].name}
                       {holidays.length > 1 ? ` +${holidays.length - 1}` : ''}
                     </p>
                   ) : (
-                    <p className="mt-2 text-xs text-slate-500">{isWeekend ? 'Weekend' : 'Study day'}</p>
+                    <p className="mt-0.5 text-[9px] text-slate-500 sm:mt-2 sm:text-xs">{isWeekend ? 'Weekend' : 'Study day'}</p>
                   )}
                 </button>
               )
             })}
+            </div>
           </div>
         </article>
 
