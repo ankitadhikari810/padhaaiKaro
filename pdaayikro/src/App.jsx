@@ -60,7 +60,7 @@ function App() {
 
           <Route element={<ProtectedRoute user={user} />}>
             <Route element={<AppShell user={user} />}>
-              <Route path="/home" element={<HomePage user={user} />} />
+              <Route path="/home" element={<DashboardPage user={user} />} />
               <Route path="/dashboard" element={<DashboardPage user={user} />} />
               <Route path="/calendar" element={<CalendarPage user={user} />} />
               <Route path="/library" element={<LibraryPage user={user} />} />

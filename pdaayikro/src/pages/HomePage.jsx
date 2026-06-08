@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { getApiBaseUrl } from '../utils/api'
 import { Bell, Flame } from 'lucide-react'
 import StreakModal from '../components/StreakModal'
@@ -83,6 +84,19 @@ function HomePage({ user }) {
         streakCount={streakInfo.streakCount}
         dailyActiveSeconds={streakInfo.dailyActiveSeconds}
       />
+
+      {/* Dashboard shortcut box */}
+      <div className="mb-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <Link to="/dashboard" className="rounded-xl border border-slate-200 bg-white p-4 hover:shadow-sm transition">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-900">Dashboard</p>
+              <p className="text-xs text-slate-500 mt-1">Open full dashboard</p>
+            </div>
+            <div className="text-2xl" aria-hidden>📊</div>
+          </div>
+        </Link>
+      </div>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-5">
         <div className="flex flex-wrap items-end justify-between gap-3">

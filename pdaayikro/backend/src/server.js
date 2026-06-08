@@ -7,9 +7,12 @@ const { PrismaClient } = require("@prisma/client");
 dotenv.config();
 
 const dbUrl = process.env.DATABASE_URL?.trim();
-const hasBrokenLocalPath = dbUrl === "file:./prisma/dev.db";
-if (!dbUrl || hasBrokenLocalPath) {
-  process.env.DATABASE_URL = "file:./dev.db";
+if (!dbUrl) {
+  // Only set a fallback when DATABASE_URL is missing. Do not override a
+  // valid SQLite file URL (e.g. file:./dev.db).
+  process.env.DATABASE_URL = process.env.LOCAL_DATABASE_URL ||
+    "postgresql://postgres:postgres@127.0.0.1:5432/pdaayikro_backend?schema=public";
+  console.warn("No DATABASE_URL found, using fallback:", process.env.DATABASE_URL);
 }
 
 const app = express();
