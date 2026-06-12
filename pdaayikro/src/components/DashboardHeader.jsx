@@ -19,7 +19,7 @@ function DashboardHeader({ user, onOpenSidebar }) {
   const initials = getInitials(user?.fullName)
 
   return (
-    <header className="sticky top-0 z-20 w-full bg-slate-950">
+    <header className="sticky top-0 z-20 w-full bg-slate-800">
       <div className="flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <button
@@ -32,7 +32,7 @@ function DashboardHeader({ user, onOpenSidebar }) {
             <Menu size={18} />
           </button>
           <Link to="/home" className="inline-flex items-center gap-2">
-          <img src="/favicon.svg" alt="PdaayiKro logo" className="h-7 w-7 rounded-md bg-white object-contain" />
+          <img src="/logo.png" alt="PdaayiKro logo" className="h-8 w-auto object-contain" />
           <p className="text-sm font-semibold text-slate-100">PdaayiKro</p>
           </Link>
         </div>
