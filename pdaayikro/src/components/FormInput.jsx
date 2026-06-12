@@ -7,6 +7,7 @@ function FormInput({
   required = true,
   min,
   max,
+  step,
 }) {
   return (
     <input
@@ -18,7 +19,8 @@ function FormInput({
       placeholder={placeholder}
       min={min}
       max={max}
-      className="w-full rounded-lg border border-rose-200 bg-white px-3 py-2 text-slate-700 outline-none ring-fuchsia-300/60 placeholder:text-slate-400 focus:ring"
+      step={step}
+      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring focus:ring-blue-500/30"
     />
   )
 }

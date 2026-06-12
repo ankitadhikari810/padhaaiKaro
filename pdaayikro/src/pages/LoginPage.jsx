@@ -32,7 +32,7 @@ function LoginPage({ onLogin }) {
 
       if (!response.ok) {
         throw new Error(data.error || 'Login failed')
-      } 
+      }
 
       onLogin(data.user)
       navigate('/home', { replace: true })
@@ -45,10 +45,11 @@ function LoginPage({ onLogin }) {
 
   return (
     <AuthLayout
-      title="Welcome Back"
-      subtitle="Login to open your personalized study dashboard and progress plan."
+      title="Welcome back"
+      subtitle="Log in to open your personalized study dashboard."
+      onBack={() => navigate('/register')}
     >
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="space-y-3" onSubmit={handleSubmit}>
         <FormInput
           name="email"
           type="email"
@@ -66,17 +67,17 @@ function LoginPage({ onLogin }) {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full rounded-lg bg-fuchsia-600 px-4 py-2 font-semibold text-white transition hover:bg-fuchsia-500 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-full bg-blue-600 px-4 py-3.5 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isLoading ? 'Checking...' : 'Login'}
+          {isLoading ? 'Checking...' : 'Log in'}
         </button>
       </form>
 
-      {error ? <p className="mt-4 text-sm text-rose-400">{error}</p> : null}
+      {error ? <p className="mt-4 text-center text-sm text-rose-500">{error}</p> : null}
 
-      <p className="mt-6 text-sm text-slate-600">
+      <p className="mt-6 text-center text-sm text-slate-500">
         New user?{' '}
-        <Link className="text-fuchsia-700 hover:text-fuchsia-600" to="/register">
+        <Link className="font-semibold text-blue-600 hover:text-blue-700" to="/register">
           Create an account
         </Link>
       </p>
